@@ -1,7 +1,8 @@
-const CACHE_NAME = "tbm-pwa-v1";
+const CACHE_NAME = "tbm-pwa-v2";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
+  "./data.js",
   "./manifest.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png"

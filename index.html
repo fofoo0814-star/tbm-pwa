@@ -1,393 +1,106 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#1f7a4d" />
-  <meta name="description" content="한국도로공사서비스 작업 전 TBM 안내앱" />
-  <link rel="manifest" href="./manifest.json" />
-  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
-  <title>오늘의 TBM</title>
-  <style>
-    :root {
-      --green: #1f7a4d;
-      --green-dark: #155f3b;
-      --mint: #e9f7ef;
-      --yellow: #ffd95a;
-      --black: #1f2933;
-      --gray: #6b7280;
-      --line: #e5e7eb;
-      --bg: #f7f8fa;
-      --card: #ffffff;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--black);
-    }
-    .app {
-      max-width: 520px;
-      margin: 0 auto;
-      min-height: 100vh;
-      background: var(--bg);
-      padding-bottom: 84px;
-    }
-    header {
-      background: linear-gradient(135deg, var(--green), var(--green-dark));
-      color: #fff;
-      padding: 22px 20px 24px;
-      border-bottom-left-radius: 26px;
-      border-bottom-right-radius: 26px;
-      box-shadow: 0 8px 24px rgba(31, 122, 77, 0.22);
-    }
-    .topline {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      font-size: 13px;
-      opacity: 0.92;
-    }
-    .badge {
-      background: rgba(255,255,255,0.18);
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 999px;
-      padding: 6px 10px;
-      white-space: nowrap;
-    }
-    h1 {
-      margin: 18px 0 8px;
-      font-size: 28px;
-      line-height: 1.2;
-      letter-spacing: -0.8px;
-    }
-    .subtitle {
-      margin: 0;
-      font-size: 15px;
-      line-height: 1.6;
-      opacity: 0.94;
-    }
-    main { padding: 18px 16px; }
-    .notice {
-      background: #fff8df;
-      border: 1px solid #ffe9a3;
-      color: #5f4700;
-      border-radius: 18px;
-      padding: 14px;
-      font-size: 14px;
-      line-height: 1.55;
-      margin-bottom: 14px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin: 14px 0 18px;
-    }
-    .menu-card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 16px 14px;
-      min-height: 112px;
-      box-shadow: 0 6px 18px rgba(15,23,42,0.05);
-      cursor: pointer;
-      transition: transform .15s ease;
-    }
-    .menu-card:active { transform: scale(0.98); }
-    .icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 14px;
-      background: var(--mint);
-      display: grid;
-      place-items: center;
-      font-size: 21px;
-      margin-bottom: 12px;
-    }
-    .menu-card h2 {
-      margin: 0 0 6px;
-      font-size: 16px;
-      letter-spacing: -0.4px;
-    }
-    .menu-card p {
-      margin: 0;
-      color: var(--gray);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-    .section {
-      display: none;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 18px;
-      margin-bottom: 16px;
-      box-shadow: 0 6px 18px rgba(15,23,42,0.05);
-    }
-    .section.active { display: block; }
-    .section h2 {
-      margin: 0 0 12px;
-      font-size: 21px;
-      letter-spacing: -0.6px;
-    }
-    .section p, .section li {
-      font-size: 15px;
-      line-height: 1.7;
-    }
-    .pill-title {
-      display: inline-block;
-      background: var(--mint);
-      color: var(--green-dark);
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-    .check-list {
-      list-style: none;
-      padding: 0;
-      margin: 12px 0 0;
-    }
-    .check-list li {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      padding: 10px 0;
-      border-bottom: 1px dashed var(--line);
-    }
-    .check-list li:last-child { border-bottom: 0; }
-    .check {
-      width: 22px;
-      height: 22px;
-      border-radius: 8px;
-      background: var(--green);
-      color: #fff;
-      display: grid;
-      place-items: center;
-      flex: 0 0 22px;
-      font-size: 14px;
-      font-weight: 900;
-      margin-top: 2px;
-    }
-    .stretch-step {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 13px;
-      margin: 10px 0;
-      background: #fbfcfd;
-    }
-    .stretch-step strong {
-      display: block;
-      margin-bottom: 4px;
-    }
-    .btn {
-      width: 100%;
-      border: 0;
-      border-radius: 16px;
-      padding: 14px 16px;
-      background: var(--green);
-      color: #fff;
-      font-size: 16px;
-      font-weight: 800;
-      margin-top: 12px;
-      cursor: pointer;
-    }
-    .complete-box {
-      display: none;
-      margin-top: 12px;
-      padding: 14px;
-      border-radius: 16px;
-      background: var(--mint);
-      color: var(--green-dark);
-      font-weight: 700;
-      line-height: 1.5;
-    }
-    nav {
-      position: fixed;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      width: min(520px, 100%);
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      background: #fff;
-      border-top: 1px solid var(--line);
-      padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
-      box-shadow: 0 -8px 24px rgba(15,23,42,0.07);
-    }
-    nav button {
-      border: 0;
-      background: transparent;
-      padding: 8px 4px;
-      border-radius: 14px;
-      font-size: 12px;
-      color: var(--gray);
-      cursor: pointer;
-    }
-    nav button.active {
-      background: var(--mint);
-      color: var(--green-dark);
-      font-weight: 800;
-    }
-    .nav-ico {
-      display: block;
-      font-size: 20px;
-      margin-bottom: 2px;
-    }
-    footer {
-      text-align: center;
-      color: var(--gray);
-      font-size: 12px;
-      padding: 10px 0 4px;
-    }
-    .install-tip {
-      font-size: 13px;
-      color: var(--gray);
-      line-height: 1.5;
-      margin-top: 10px;
-    }
-    @media (min-width: 700px) {
-      body { background: #eef2f7; }
-      .app { box-shadow: 0 0 40px rgba(15,23,42,0.08); }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f7a4d">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<title>작업 전 TBM 안내</title>
+<style>
+:root{--green:#1f7a4d;--dark:#155f3b;--mint:#e9f7ef;--yellow:#ffd95a;--soft:#fff7d6;--black:#1f2933;--gray:#6b7280;--line:#e5e7eb;--bg:#f7f8fa;--card:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",Arial,sans-serif;background:var(--bg);color:var(--black)}
+.app{max-width:560px;margin:0 auto;min-height:100vh;padding-bottom:92px;background:var(--bg)}
+header{background:linear-gradient(135deg,var(--green),var(--dark));color:white;padding:24px 20px 26px;border-bottom-left-radius:28px;border-bottom-right-radius:28px;box-shadow:0 8px 24px rgba(31,122,77,.22)}
+.top{display:flex;justify-content:space-between;gap:10px;font-size:13px}.badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 10px;font-weight:700}
+h1{margin:18px 0 8px;font-size:28px;line-height:1.2;letter-spacing:-.8px}.subtitle{margin:0;font-size:15px;line-height:1.6;opacity:.94}
+main{padding:18px 16px}.notice{background:var(--soft);border:1px solid #ffe9a3;color:#5f4700;border-radius:18px;padding:14px;font-size:14px;line-height:1.55;margin-bottom:14px}
+.install{background:#fff;border:2px solid #d8efe2;border-radius:22px;padding:17px;margin-bottom:16px;box-shadow:0 8px 22px rgba(15,23,42,.06)}
+.install h2{margin:0 0 8px;font-size:20px}.install p{margin:0;color:var(--gray);font-size:14px;line-height:1.6}
+.btn{width:100%;border:0;border-radius:16px;padding:14px 16px;background:var(--green);color:white;font-size:16px;font-weight:800;cursor:pointer;margin-top:10px}.btn.sub{background:#eef2f7;color:var(--black)}.btn.warn{background:var(--yellow);color:#4b3500}
+.small{font-size:12px;color:var(--gray);line-height:1.45;margin-top:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px 14px;min-height:112px;box-shadow:0 6px 18px rgba(15,23,42,.05);cursor:pointer}
+.card:active{transform:scale(.98)}.ico{width:38px;height:38px;border-radius:14px;background:var(--mint);display:grid;place-items:center;font-size:22px;margin-bottom:12px}
+.card h2{margin:0 0 6px;font-size:16px}.card p{margin:0;color:var(--gray);font-size:13px;line-height:1.45}
+.section{display:none;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:16px;box-shadow:0 6px 18px rgba(15,23,42,.05)}
+.section.active{display:block}.section h2{margin:0 0 12px;font-size:21px}.section p,.section li{font-size:15px;line-height:1.7}
+.pill{display:inline-block;background:var(--mint);color:var(--dark);border-radius:999px;padding:6px 10px;font-size:13px;font-weight:800;margin-bottom:10px}
+.list{list-style:none;padding:0;margin:12px 0 0}.list li{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--line)}.list li:last-child{border-bottom:0}
+.check{width:24px;height:24px;border-radius:8px;background:var(--green);color:white;display:grid;place-items:center;flex:0 0 24px;font-size:14px;font-weight:900;margin-top:2px}
+.step{border:1px solid var(--line);border-radius:16px;padding:13px;margin:10px 0;background:#fbfcfd}.step strong{display:block;margin-bottom:4px}
+label{display:block;font-size:14px;font-weight:800;margin:12px 0 6px}input,select{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 12px;font-size:16px;background:#fff}
+.agree{display:flex;gap:10px;align-items:flex-start;margin:12px 0;padding:12px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-size:14px;line-height:1.5}.agree input{width:auto;margin-top:3px}
+.complete{display:none;margin-top:12px;padding:14px;border-radius:16px;background:var(--mint);color:var(--dark);font-weight:800;line-height:1.5}
+.warnbox{background:#fff5f5;border:1px solid #ffd1d1;color:#8a1f1f;border-radius:16px;padding:13px;font-size:13px;line-height:1.55;margin-top:12px}
+.guide{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fbfcfd;margin-bottom:10px}.guide h3{margin:0 0 8px;font-size:16px}
+nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(560px,100%);display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px rgba(15,23,42,.07)}
+nav button{border:0;background:transparent;padding:8px 4px;border-radius:14px;font-size:12px;color:var(--gray);cursor:pointer}nav button.active{background:var(--mint);color:var(--dark);font-weight:800}.navico{display:block;font-size:20px;margin-bottom:2px}
+footer{text-align:center;color:var(--gray);font-size:12px;padding:10px 0 4px}
+</style>
 </head>
 <body>
-  <div class="app">
-    <header>
-      <div class="topline">
-        <span>한국도로공사서비스</span>
-        <span class="badge" id="todayText">오늘</span>
-      </div>
-      <h1>오늘의 TBM</h1>
-      <p class="subtitle">작업 전 10분, 오늘의 안전을 먼저 확인하세요.</p>
-    </header>
+<div class="app">
+<header><div class="top"><span id="orgName">작업 전 안전보건</span><span class="badge" id="todayText">오늘</span></div><h1 id="appTitle">작업 전 TBM 안내</h1><p class="subtitle">최초 1회 QR 접속 후, 홈 화면 아이콘으로 바로 확인하세요.</p></header>
+<main>
+<div class="notice"><b>운영 방식</b><br>QR코드는 최초 접속용입니다. 휴대폰 홈 화면에 바로가기 아이콘을 추가하면 이후에는 QR 없이 바로 접속할 수 있습니다.</div>
 
-    <main>
-      <div class="notice">
-        <strong>운영 안내</strong><br />
-        이 화면은 PWA형 TBM 안내앱의 시작 버전입니다. 내용은 추후 회사 기준에 맞게 계속 수정할 수 있습니다.
-      </div>
+<section class="install">
+<h2>📱 TBM 바로가기 아이콘 만들기</h2>
+<p>처음 한 번만 설정하면, 다음부터는 홈 화면의 TBM 아이콘을 눌러 바로 접속할 수 있습니다.</p>
+<button class="btn warn" id="installButton">갤럭시/안드로이드 아이콘 추가하기</button>
+<button class="btn sub" onclick="showSection('installGuide')">아이폰·갤럭시 추가방법 보기</button>
+<div class="small">※ 아이폰은 보안정책상 자동 버튼이 제한되어 Safari 공유 버튼에서 직접 추가해야 합니다.</div>
+</section>
 
-      <div class="grid">
-        <article class="menu-card" onclick="showSection('tbm')">
-          <div class="icon">📋</div>
-          <h2>오늘의 TBM</h2>
-          <p>작업 전 핵심 안전수칙 확인</p>
-        </article>
-        <article class="menu-card" onclick="showSection('stretch')">
-          <div class="icon">🙆</div>
-          <h2>3분 스트레칭</h2>
-          <p>목·어깨·허리 부담 완화</p>
-        </article>
-        <article class="menu-card" onclick="showSection('ppe')">
-          <div class="icon">🦺</div>
-          <h2>보호구 체크</h2>
-          <p>작업 전 착용상태 점검</p>
-        </article>
-        <article class="menu-card" onclick="showSection('emergency')">
-          <div class="icon">🚨</div>
-          <h2>응급상황 대응</h2>
-          <p>신고·응급조치 흐름 확인</p>
-        </article>
-      </div>
+<div class="grid">
+<article class="card" onclick="showSection('tbm')"><div class="ico">📋</div><h2>오늘의 TBM</h2><p>작업 전 핵심 안전수칙 확인</p></article>
+<article class="card" onclick="showSection('stretch')"><div class="ico">🙆</div><h2>스트레칭</h2><p>목·어깨·허리 부담 완화</p></article>
+<article class="card" onclick="showSection('ppe')"><div class="ico">🦺</div><h2>보호구 체크</h2><p>작업 전 착용상태 점검</p></article>
+<article class="card" onclick="showSection('confirm')"><div class="ico">✅</div><h2>확인 완료</h2><p>사번 입력 후 TBM 확인</p></article>
+</div>
 
-      <section class="section active" id="tbm">
-        <span class="pill-title">작업 전 안내사항</span>
-        <h2>오늘의 핵심 안전수칙</h2>
-        <p>작업 시작 전 주변 위험요인을 확인하고, 차로 이동 시 반드시 좌우를 살핀 후 이동합니다.</p>
-        <ul class="check-list">
-          <li><span class="check">✓</span><span>작업 전 위험요인 및 이동 동선을 확인합니다.</span></li>
-          <li><span class="check">✓</span><span>차로 이동 시 전방·좌우 차량 접근 여부를 확인합니다.</span></li>
-          <li><span class="check">✓</span><span>계단, 지하통로, 육교 이용 시 미끄럼·넘어짐에 주의합니다.</span></li>
-          <li><span class="check">✓</span><span>교대 및 차로 폐쇄 시 신호등 변경 여부를 확인합니다.</span></li>
-        </ul>
-        <button class="btn" onclick="completeCheck()">TBM 확인 완료</button>
-        <div class="complete-box" id="completeBox">확인 완료! 오늘도 안전하게 근무하세요.</div>
-      </section>
+<section class="section active" id="tbm"><span class="pill">작업 전 안내사항</span><h2 id="tbmTitle"></h2><p id="tbmDescription"></p><ul class="list" id="tbmChecklist"></ul><button class="btn" onclick="showSection('confirm')">오늘 TBM 확인 완료</button></section>
 
-      <section class="section" id="stretch">
-        <span class="pill-title">근골격계질환 예방</span>
-        <h2>3분 스트레칭</h2>
-        <div class="stretch-step"><strong>1. 목 스트레칭</strong>고개를 천천히 아래로 숙였다가 정면으로 돌아옵니다.</div>
-        <div class="stretch-step"><strong>2. 어깨 돌리기</strong>양쪽 어깨를 크게 뒤로 돌려 긴장을 풀어줍니다.</div>
-        <div class="stretch-step"><strong>3. 손목 풀기</strong>손목을 천천히 돌리고 손바닥을 앞으로 밀어줍니다.</div>
-        <div class="stretch-step"><strong>4. 허리 펴기</strong>양손을 허리에 두고 허리를 가볍게 펴며 자세를 정돈합니다.</div>
-      </section>
+<section class="section" id="stretch"><span class="pill">근골격계질환 예방</span><h2>3분 스트레칭</h2><div id="stretchList"></div></section>
 
-      <section class="section" id="ppe">
-        <span class="pill-title">보호구 착용</span>
-        <h2>작업 전 보호구 체크</h2>
-        <ul class="check-list">
-          <li><span class="check">✓</span><span>안전조끼 등 눈에 잘 띄는 복장을 착용했습니다.</span></li>
-          <li><span class="check">✓</span><span>필요 작업 시 안전모, 안전화 등 보호구를 착용했습니다.</span></li>
-          <li><span class="check">✓</span><span>야간·우천 등 위험요인에 맞는 보호구 상태를 확인했습니다.</span></li>
-        </ul>
-      </section>
+<section class="section" id="ppe"><span class="pill">보호구 착용</span><h2>작업 전 보호구 체크</h2><ul class="list" id="ppeChecklist"></ul></section>
 
-      <section class="section" id="emergency">
-        <span class="pill-title">응급상황 대응</span>
-        <h2>사고 발생 시 대응 흐름</h2>
-        <ul class="check-list">
-          <li><span class="check">1</span><span>즉시 안전한 장소를 확보하고 추가 사고를 방지합니다.</span></li>
-          <li><span class="check">2</span><span>119 신고 및 현장 관리자에게 즉시 보고합니다.</span></li>
-          <li><span class="check">3</span><span>필요 시 심폐소생술 및 AED 사용 등 응급조치를 실시합니다.</span></li>
-          <li><span class="check">4</span><span>사고 발생 경위와 조치사항을 기록·보고합니다.</span></li>
-        </ul>
-      </section>
+<section class="section" id="emergency"><span class="pill">응급상황 대응</span><h2>사고 발생 시 대응 흐름</h2><ul class="list" id="emergencyChecklist"></ul></section>
 
-      <section class="section" id="info">
-        <span class="pill-title">앱 안내</span>
-        <h2>PWA 안내앱 사용방법</h2>
-        <p>모바일 브라우저에서 접속 후 홈 화면에 추가하면 앱처럼 사용할 수 있습니다.</p>
-        <p class="install-tip">
-          아이폰: Safari 공유 버튼 → 홈 화면에 추가<br />
-          갤럭시/안드로이드: Chrome 메뉴 → 앱 설치 또는 홈 화면에 추가
-        </p>
-      </section>
+<section class="section" id="confirm">
+<span class="pill">TBM 이행 확인</span><h2>오늘 TBM 확인 완료</h2><p>TBM 내용을 확인한 후 사번을 입력하고 제출해 주세요.</p>
+<label for="employeeId">사번</label><input id="employeeId" inputmode="numeric" placeholder="사번을 입력하세요">
+<label for="branch">권역</label><select id="branch"><option value="">권역을 선택하세요</option><option>본사·콜센터</option><option>수도권동부</option><option>수도권서부</option><option>강원</option><option>충북</option><option>대전충남</option><option>전북</option><option>광주전남</option><option>부산경남동부</option><option>부산경남서부</option></select>
+<label for="workplace">사업장명</label><input id="workplace" placeholder="예: ○○영업소">
+<label class="agree"><input type="checkbox" id="agreeCheck"><span>오늘의 TBM 내용을 확인했으며, 작업 전 안전수칙을 준수하겠습니다.</span></label>
+<button class="btn" onclick="submitConfirm()">제출하기</button><div class="complete" id="completeBox"></div>
+<div class="warnbox">현재 파일은 저장서버가 연결되지 않은 시제품입니다. 제출 기록은 이 기기에만 임시 저장됩니다. 실제 확인률 집계를 위해서는 사내 설문, 승인된 폼, 또는 별도 저장시스템 연계가 필요합니다.</div>
+</section>
 
-      <footer>미래전략실 안전관리팀</footer>
-    </main>
+<section class="section" id="installGuide">
+<span class="pill">바로가기 아이콘 생성</span><h2>홈 화면에 TBM 아이콘 추가하기</h2>
+<div class="guide"><h3>갤럭시 / 안드로이드</h3><ol><li>QR코드로 TBM 안내페이지에 접속합니다.</li><li>화면 오른쪽 위 점 3개 메뉴를 누릅니다.</li><li>‘앱 설치’ 또는 ‘홈 화면에 추가’를 선택합니다.</li><li>홈 화면의 TBM 아이콘을 누르면 바로 접속됩니다.</li></ol></div>
+<div class="guide"><h3>아이폰</h3><ol><li>Safari로 TBM 안내페이지에 접속합니다.</li><li>하단 공유 버튼을 누릅니다.</li><li>‘홈 화면에 추가’를 선택합니다.</li><li>오른쪽 위 ‘추가’를 누릅니다.</li></ol></div>
+<button class="btn sub" onclick="showSection('tbm')">TBM 화면으로 돌아가기</button>
+</section>
 
-    <nav>
-      <button class="active" onclick="showSection('tbm', this)"><span class="nav-ico">📋</span>TBM</button>
-      <button onclick="showSection('stretch', this)"><span class="nav-ico">🙆</span>스트레칭</button>
-      <button onclick="showSection('ppe', this)"><span class="nav-ico">🦺</span>보호구</button>
-      <button onclick="showSection('info', this)"><span class="nav-ico">ℹ️</span>안내</button>
-    </nav>
-  </div>
-
-  <script>
-    const today = new Date();
-    const days = ["일", "월", "화", "수", "목", "금", "토"];
-    document.getElementById("todayText").textContent =
-      `${today.getFullYear()}. ${today.getMonth() + 1}. ${today.getDate()}. ${days[today.getDay()]}요일`;
-
-    function showSection(id, btn) {
-      document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
-      document.getElementById(id).classList.add("active");
-
-      document.querySelectorAll("nav button").forEach(button => button.classList.remove("active"));
-      if (btn) btn.classList.add("active");
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function completeCheck() {
-      const box = document.getElementById("completeBox");
-      box.style.display = "block";
-      localStorage.setItem("tbmLastCheck", new Date().toISOString());
-    }
-
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js");
-      });
-    }
-  </script>
+<section class="section" id="info"><span class="pill">앱 안내</span><h2>운영 안내</h2><p>본 안내페이지는 별도 앱 설치 없이 QR코드 또는 홈 화면 바로가기 아이콘으로 접속하는 모바일 웹 기반 TBM 안내자료입니다.</p><ul class="list"><li><span class="check">✓</span><span>최초 1회 QR 접속 후 홈 화면 바로가기 아이콘 생성 가능</span></li><li><span class="check">✓</span><span>관리자가 웹페이지 내용을 수정하면 동일 주소에서 최신 내용 확인 가능</span></li><li><span class="check">✓</span><span>인터넷 연결이 불안정한 경우 기존 저장 화면이 표시될 수 있음</span></li><li><span class="check">✓</span><span>동영상 등 대용량 자료는 내부망 자료실 별도 게시 권장</span></li></ul></section>
+<footer>안전관리팀 · TBM 안내페이지 시제품</footer>
+</main>
+<nav><button class="active" onclick="showSection('tbm',this)"><span class="navico">📋</span>TBM</button><button onclick="showSection('stretch',this)"><span class="navico">🙆</span>스트레칭</button><button onclick="showSection('confirm',this)"><span class="navico">✅</span>확인</button><button onclick="showSection('info',this)"><span class="navico">ℹ️</span>안내</button></nav>
+</div>
+<script src="./data.js"></script>
+<script>
+const today=new Date();const days=["일","월","화","수","목","금","토"];document.getElementById("todayText").textContent=`${today.getFullYear()}. ${today.getMonth()+1}. ${today.getDate()}. ${days[today.getDay()]}요일`;
+let deferredPrompt=null;window.addEventListener("beforeinstallprompt",(event)=>{event.preventDefault();deferredPrompt=event;});
+document.getElementById("installButton").addEventListener("click",async()=>{if(!deferredPrompt){showSection("installGuide");return;}deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;});
+function showSection(id,btn){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");window.scrollTo({top:0,behavior:"smooth"});}
+function renderList(targetId,items,numbered=false){const target=document.getElementById(targetId);target.innerHTML="";items.forEach((item,i)=>{const li=document.createElement("li");li.innerHTML=`<span class="check">${numbered?i+1:"✓"}</span><span>${item}</span>`;target.appendChild(li);});}
+function renderStretch(){const target=document.getElementById("stretchList");target.innerHTML="";TBM_DATA.stretching.forEach((step,i)=>{const div=document.createElement("div");div.className="step";div.innerHTML=`<strong>${i+1}. ${step.title}</strong>${step.description}`;target.appendChild(div);});}
+function renderContent(){document.getElementById("orgName").textContent=TBM_DATA.organizationName;document.getElementById("appTitle").textContent=TBM_DATA.appTitle;document.getElementById("tbmTitle").textContent=TBM_DATA.today.title;document.getElementById("tbmDescription").textContent=TBM_DATA.today.description;renderList("tbmChecklist",TBM_DATA.today.checklist);renderStretch();renderList("ppeChecklist",TBM_DATA.ppeChecklist);renderList("emergencyChecklist",TBM_DATA.emergencySteps,true);}
+function submitConfirm(){const employeeId=document.getElementById("employeeId").value.trim();const branch=document.getElementById("branch").value.trim();const workplace=document.getElementById("workplace").value.trim();const agree=document.getElementById("agreeCheck").checked;if(!employeeId||!branch||!workplace||!agree){alert("사번, 권역, 사업장명 입력 및 확인 체크가 필요합니다.");return;}const record={date:today.toISOString(),employeeId,branch,workplace,confirmed:true};localStorage.setItem("tbmConfirmRecord",JSON.stringify(record));const box=document.getElementById("completeBox");box.style.display="block";box.innerHTML=`확인 완료되었습니다.<br>${branch} / ${workplace} / 사번 ${employeeId}`;}
+if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./sw.js");});}
+renderContent();
+</script>
 </body>
 </html>

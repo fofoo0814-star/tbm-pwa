@@ -1,8 +1,9 @@
 {
-  "name": "오늘의 TBM",
-  "short_name": "TBM",
-  "description": "작업 전 안전수칙, 스트레칭, 보호구 체크를 제공하는 PWA형 TBM 안내앱",
+  "name": "작업 전 TBM 안내",
+  "short_name": "TBM 안내",
+  "description": "작업 전 안전수칙, 스트레칭, 보호구 체크를 제공하는 모바일 웹 기반 TBM 안내페이지",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f7f8fa",
   "theme_color": "#1f7a4d",
