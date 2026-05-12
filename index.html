@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f7a4d" />
+  <meta name="description" content="한국도로공사서비스 작업 전 TBM 안내앱" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <title>오늘의 TBM</title>
+  <style>
+    :root {
+      --green: #1f7a4d;
+      --green-dark: #155f3b;
+      --mint: #e9f7ef;
+      --yellow: #ffd95a;
+      --black: #1f2933;
+      --gray: #6b7280;
+      --line: #e5e7eb;
+      --bg: #f7f8fa;
+      --card: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--black);
+    }
+    .app {
+      max-width: 520px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: var(--bg);
+      padding-bottom: 84px;
+    }
+    header {
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: #fff;
+      padding: 22px 20px 24px;
+      border-bottom-left-radius: 26px;
+      border-bottom-right-radius: 26px;
+      box-shadow: 0 8px 24px rgba(31, 122, 77, 0.22);
+    }
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      opacity: 0.92;
+    }
+    .badge {
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px;
+      padding: 6px 10px;
+      white-space: nowrap;
+    }
+    h1 {
+      margin: 18px 0 8px;
+      font-size: 28px;
+      line-height: 1.2;
+      letter-spacing: -0.8px;
+    }
+    .subtitle {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.6;
+      opacity: 0.94;
+    }
+    main { padding: 18px 16px; }
+    .notice {
+      background: #fff8df;
+      border: 1px solid #ffe9a3;
+      color: #5f4700;
+      border-radius: 18px;
+      padding: 14px;
+      font-size: 14px;
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 14px 0 18px;
+    }
+    .menu-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px 14px;
+      min-height: 112px;
+      box-shadow: 0 6px 18px rgba(15,23,42,0.05);
+      cursor: pointer;
+      transition: transform .15s ease;
+    }
+    .menu-card:active { transform: scale(0.98); }
+    .icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      background: var(--mint);
+      display: grid;
+      place-items: center;
+      font-size: 21px;
+      margin-bottom: 12px;
+    }
+    .menu-card h2 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      letter-spacing: -0.4px;
+    }
+    .menu-card p {
+      margin: 0;
+      color: var(--gray);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .section {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 6px 18px rgba(15,23,42,0.05);
+    }
+    .section.active { display: block; }
+    .section h2 {
+      margin: 0 0 12px;
+      font-size: 21px;
+      letter-spacing: -0.6px;
+    }
+    .section p, .section li {
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .pill-title {
+      display: inline-block;
+      background: var(--mint);
+      color: var(--green-dark);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .check-list {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 0;
+    }
+    .check-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+    .check-list li:last-child { border-bottom: 0; }
+    .check {
+      width: 22px;
+      height: 22px;
+      border-radius: 8px;
+      background: var(--green);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      flex: 0 0 22px;
+      font-size: 14px;
+      font-weight: 900;
+      margin-top: 2px;
+    }
+    .stretch-step {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 13px;
+      margin: 10px 0;
+      background: #fbfcfd;
+    }
+    .stretch-step strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+    .btn {
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      padding: 14px 16px;
+      background: var(--green);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+    .complete-box {
+      display: none;
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: var(--mint);
+      color: var(--green-dark);
+      font-weight: 700;
+      line-height: 1.5;
+    }
+    nav {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: min(520px, 100%);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: #fff;
+      border-top: 1px solid var(--line);
+      padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+      box-shadow: 0 -8px 24px rgba(15,23,42,0.07);
+    }
+    nav button {
+      border: 0;
+      background: transparent;
+      padding: 8px 4px;
+      border-radius: 14px;
+      font-size: 12px;
+      color: var(--gray);
+      cursor: pointer;
+    }
+    nav button.active {
+      background: var(--mint);
+      color: var(--green-dark);
+      font-weight: 800;
+    }
+    .nav-ico {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 2px;
+    }
+    footer {
+      text-align: center;
+      color: var(--gray);
+      font-size: 12px;
+      padding: 10px 0 4px;
+    }
+    .install-tip {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.5;
+      margin-top: 10px;
+    }
+    @media (min-width: 700px) {
+      body { background: #eef2f7; }
+      .app { box-shadow: 0 0 40px rgba(15,23,42,0.08); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="topline">
+        <span>한국도로공사서비스</span>
+        <span class="badge" id="todayText">오늘</span>
+      </div>
+      <h1>오늘의 TBM</h1>
+      <p class="subtitle">작업 전 10분, 오늘의 안전을 먼저 확인하세요.</p>
+    </header>
+
+    <main>
+      <div class="notice">
+        <strong>운영 안내</strong><br />
+        이 화면은 PWA형 TBM 안내앱의 시작 버전입니다. 내용은 추후 회사 기준에 맞게 계속 수정할 수 있습니다.
+      </div>
+
+      <div class="grid">
+        <article class="menu-card" onclick="showSection('tbm')">
+          <div class="icon">📋</div>
+          <h2>오늘의 TBM</h2>
+          <p>작업 전 핵심 안전수칙 확인</p>
+        </article>
+        <article class="menu-card" onclick="showSection('stretch')">
+          <div class="icon">🙆</div>
+          <h2>3분 스트레칭</h2>
+          <p>목·어깨·허리 부담 완화</p>
+        </article>
+        <article class="menu-card" onclick="showSection('ppe')">
+          <div class="icon">🦺</div>
+          <h2>보호구 체크</h2>
+          <p>작업 전 착용상태 점검</p>
+        </article>
+        <article class="menu-card" onclick="showSection('emergency')">
+          <div class="icon">🚨</div>
+          <h2>응급상황 대응</h2>
+          <p>신고·응급조치 흐름 확인</p>
+        </article>
+      </div>
+
+      <section class="section active" id="tbm">
+        <span class="pill-title">작업 전 안내사항</span>
+        <h2>오늘의 핵심 안전수칙</h2>
+        <p>작업 시작 전 주변 위험요인을 확인하고, 차로 이동 시 반드시 좌우를 살핀 후 이동합니다.</p>
+        <ul class="check-list">
+          <li><span class="check">✓</span><span>작업 전 위험요인 및 이동 동선을 확인합니다.</span></li>
+          <li><span class="check">✓</span><span>차로 이동 시 전방·좌우 차량 접근 여부를 확인합니다.</span></li>
+          <li><span class="check">✓</span><span>계단, 지하통로, 육교 이용 시 미끄럼·넘어짐에 주의합니다.</span></li>
+          <li><span class="check">✓</span><span>교대 및 차로 폐쇄 시 신호등 변경 여부를 확인합니다.</span></li>
+        </ul>
+        <button class="btn" onclick="completeCheck()">TBM 확인 완료</button>
+        <div class="complete-box" id="completeBox">확인 완료! 오늘도 안전하게 근무하세요.</div>
+      </section>
+
+      <section class="section" id="stretch">
+        <span class="pill-title">근골격계질환 예방</span>
+        <h2>3분 스트레칭</h2>
+        <div class="stretch-step"><strong>1. 목 스트레칭</strong>고개를 천천히 아래로 숙였다가 정면으로 돌아옵니다.</div>
+        <div class="stretch-step"><strong>2. 어깨 돌리기</strong>양쪽 어깨를 크게 뒤로 돌려 긴장을 풀어줍니다.</div>
+        <div class="stretch-step"><strong>3. 손목 풀기</strong>손목을 천천히 돌리고 손바닥을 앞으로 밀어줍니다.</div>
+        <div class="stretch-step"><strong>4. 허리 펴기</strong>양손을 허리에 두고 허리를 가볍게 펴며 자세를 정돈합니다.</div>
+      </section>
+
+      <section class="section" id="ppe">
+        <span class="pill-title">보호구 착용</span>
+        <h2>작업 전 보호구 체크</h2>
+        <ul class="check-list">
+          <li><span class="check">✓</span><span>안전조끼 등 눈에 잘 띄는 복장을 착용했습니다.</span></li>
+          <li><span class="check">✓</span><span>필요 작업 시 안전모, 안전화 등 보호구를 착용했습니다.</span></li>
+          <li><span class="check">✓</span><span>야간·우천 등 위험요인에 맞는 보호구 상태를 확인했습니다.</span></li>
+        </ul>
+      </section>
+
+      <section class="section" id="emergency">
+        <span class="pill-title">응급상황 대응</span>
+        <h2>사고 발생 시 대응 흐름</h2>
+        <ul class="check-list">
+          <li><span class="check">1</span><span>즉시 안전한 장소를 확보하고 추가 사고를 방지합니다.</span></li>
+          <li><span class="check">2</span><span>119 신고 및 현장 관리자에게 즉시 보고합니다.</span></li>
+          <li><span class="check">3</span><span>필요 시 심폐소생술 및 AED 사용 등 응급조치를 실시합니다.</span></li>
+          <li><span class="check">4</span><span>사고 발생 경위와 조치사항을 기록·보고합니다.</span></li>
+        </ul>
+      </section>
+
+      <section class="section" id="info">
+        <span class="pill-title">앱 안내</span>
+        <h2>PWA 안내앱 사용방법</h2>
+        <p>모바일 브라우저에서 접속 후 홈 화면에 추가하면 앱처럼 사용할 수 있습니다.</p>
+        <p class="install-tip">
+          아이폰: Safari 공유 버튼 → 홈 화면에 추가<br />
+          갤럭시/안드로이드: Chrome 메뉴 → 앱 설치 또는 홈 화면에 추가
+        </p>
+      </section>
+
+      <footer>미래전략실 안전관리팀</footer>
+    </main>
+
+    <nav>
+      <button class="active" onclick="showSection('tbm', this)"><span class="nav-ico">📋</span>TBM</button>
+      <button onclick="showSection('stretch', this)"><span class="nav-ico">🙆</span>스트레칭</button>
+      <button onclick="showSection('ppe', this)"><span class="nav-ico">🦺</span>보호구</button>
+      <button onclick="showSection('info', this)"><span class="nav-ico">ℹ️</span>안내</button>
+    </nav>
+  </div>
+
+  <script>
+    const today = new Date();
+    const days = ["일", "월", "화", "수", "목", "금", "토"];
+    document.getElementById("todayText").textContent =
+      `${today.getFullYear()}. ${today.getMonth() + 1}. ${today.getDate()}. ${days[today.getDay()]}요일`;
+
+    function showSection(id, btn) {
+      document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+
+      document.querySelectorAll("nav button").forEach(button => button.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function completeCheck() {
+      const box = document.getElementById("completeBox");
+      box.style.display = "block";
+      localStorage.setItem("tbmLastCheck", new Date().toISOString());
+    }
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js");
+      });
+    }
+  </script>
+</body>
+</html>
