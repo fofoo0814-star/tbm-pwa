@@ -1,11 +1,9 @@
-const CACHE_NAME = "tbm-pwa-v2";
+const CACHE_NAME = "tbm-pwa-v20";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./data.js",
-  "./manifest.json",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./manifest.json"
 ];
 
 self.addEventListener("install", event => {
@@ -25,5 +23,7 @@ self.addEventListener("activate", event => {
 });
 
 self.addEventListener("fetch", event => {
-  event.respondWith(caches.match(event.request).then(response => response || fetch(event.request)));
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
+  );
 });
