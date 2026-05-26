@@ -1,4 +1,4 @@
-const CACHE_NAME = "tbm-pwa-v25";
+const CACHE_NAME = "tbm-pwa-v29";
 
 self.addEventListener("install", event => {
   self.skipWaiting();
