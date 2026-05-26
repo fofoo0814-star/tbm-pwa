@@ -33,3 +33,62 @@ const TBM_DATA = {
     "사고 발생 경위와 조치사항을 기록·보고합니다."
   ]
 };
+
+// 디자인 보정: 상단 박스 제거 + 운영 안내 색상 정리
+(function(){
+  const style = document.createElement("style");
+  style.textContent = `
+    header{
+      background:transparent !important;
+      color:var(--text) !important;
+      padding:18px 18px 4px !important;
+      border-bottom:0 !important;
+      box-shadow:none !important;
+    }
+
+    .top-logo{
+      height:20px !important;
+      width:auto !important;
+      display:block !important;
+      background:transparent !important;
+      border-radius:0 !important;
+      padding:0 !important;
+    }
+
+    .badge{
+      background:transparent !important;
+      border:0 !important;
+      color:var(--sub) !important;
+      border-radius:0 !important;
+      padding:0 !important;
+      font-size:13px !important;
+      font-weight:800 !important;
+      white-space:nowrap !important;
+    }
+
+    .notice{
+      background:#F8FAFC !important;
+      border:1px solid #D7E0EA !important;
+      color:#334155 !important;
+      border-radius:18px !important;
+      padding:14px !important;
+      font-size:14px !important;
+      line-height:1.65 !important;
+      margin-bottom:14px !important;
+    }
+
+    .notice b{
+      color:#17325C !important;
+    }
+
+    .notice-highlight{
+      display:inline-block !important;
+      padding:2px 8px !important;
+      border-radius:999px !important;
+      background:#EEF4FF !important;
+      color:#183B7A !important;
+      font-weight:900 !important;
+    }
+  `;
+  document.head.appendChild(style);
+})();
