@@ -46,6 +46,8 @@ const TBM_DATA = {
     .notice-highlight{display:inline-block !important;padding:2px 8px !important;border-radius:999px !important;background:#EEF4FF !important;color:#183B7A !important;font-weight:900 !important;}
     .save-info{display:flex;gap:10px;align-items:flex-start;margin:12px 0;padding:12px;border-radius:14px;background:#F8FAFC;border:1px solid var(--line);font-size:14px;line-height:1.5;color:var(--text);font-weight:900;}
     .save-info input{width:auto;margin-top:3px;accent-color:var(--success);}
+    .save-info span{display:block;}
+    .save-info small{display:inline-block;margin-left:6px;color:var(--sub);font-size:13px;font-weight:700;}
   `;
   document.head.appendChild(style);
 
@@ -56,11 +58,18 @@ const TBM_DATA = {
     const agreeRow = document.querySelector(".agree");
     if(!employeeId || !branch || !workplace || !agreeRow) return;
 
+    workplace.placeholder = "예: 00팀 / 00영업소";
+
     if(!document.getElementById("saveInfoCheck")){
       const row = document.createElement("label");
       row.className = "save-info";
-      row.innerHTML = '<input type="checkbox" id="saveInfoCheck"><span>내 정보 저장</span>';
+      row.innerHTML = '<input type="checkbox" id="saveInfoCheck"><span>내 정보 저장 <small>※ 다음 입력 시 자동 기재</small></span>';
       agreeRow.parentNode.insertBefore(row, agreeRow);
+    }else{
+      const saveRow = document.getElementById("saveInfoCheck").closest("label");
+      if(saveRow){
+        saveRow.innerHTML = '<input type="checkbox" id="saveInfoCheck"><span>내 정보 저장 <small>※ 다음 입력 시 자동 기재</small></span>';
+      }
     }
 
     function loadSavedInfo(){
