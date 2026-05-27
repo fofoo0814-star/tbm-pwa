@@ -48,6 +48,7 @@ const TBM_DATA = {
     .save-info input{width:auto;margin-top:3px;accent-color:var(--success);}
     .save-info span{display:block;}
     .save-info small{display:inline-block;margin-left:6px;color:var(--sub);font-size:13px;font-weight:700;}
+    .stretching-menu-icon{width:24px;height:24px;display:block;object-fit:contain;border-radius:8px;}
   `;
   document.head.appendChild(style);
 
@@ -56,6 +57,16 @@ const TBM_DATA = {
     const branch = document.getElementById("branch");
     const workplace = document.getElementById("workplace");
     const agreeRow = document.querySelector(".agree");
+
+    const stretchCards = Array.from(document.querySelectorAll(".card"));
+    const stretchCard = stretchCards.find(card => card.textContent.includes("스트레칭 안내"));
+    if(stretchCard){
+      const iconBox = stretchCard.querySelector(".ico");
+      if(iconBox){
+        iconBox.innerHTML = '<img src="./images/stretching-icon.png?v=1" alt="스트레칭 안내 아이콘" class="stretching-menu-icon">';
+      }
+    }
+
     if(!employeeId || !branch || !workplace || !agreeRow) return;
 
     workplace.placeholder = "예: 00팀 / 00영업소";
