@@ -34,61 +34,72 @@ const TBM_DATA = {
   ]
 };
 
-// 디자인 보정: 상단 박스 제거 + 운영 안내 색상 정리
+// 디자인 보정 및 입력정보 저장 기능
 (function(){
   const style = document.createElement("style");
   style.textContent = `
-    header{
-      background:transparent !important;
-      color:var(--text) !important;
-      padding:18px 18px 4px !important;
-      border-bottom:0 !important;
-      box-shadow:none !important;
-    }
-
-    .top-logo{
-      height:20px !important;
-      width:auto !important;
-      display:block !important;
-      background:transparent !important;
-      border-radius:0 !important;
-      padding:0 !important;
-    }
-
-    .badge{
-      background:transparent !important;
-      border:0 !important;
-      color:var(--sub) !important;
-      border-radius:0 !important;
-      padding:0 !important;
-      font-size:13px !important;
-      font-weight:800 !important;
-      white-space:nowrap !important;
-    }
-
-    .notice{
-      background:#F8FAFC !important;
-      border:1px solid #D7E0EA !important;
-      color:#334155 !important;
-      border-radius:18px !important;
-      padding:14px !important;
-      font-size:14px !important;
-      line-height:1.65 !important;
-      margin-bottom:14px !important;
-    }
-
-    .notice b{
-      color:#17325C !important;
-    }
-
-    .notice-highlight{
-      display:inline-block !important;
-      padding:2px 8px !important;
-      border-radius:999px !important;
-      background:#EEF4FF !important;
-      color:#183B7A !important;
-      font-weight:900 !important;
-    }
+    header{background:transparent !important;color:var(--text) !important;padding:18px 18px 4px !important;border-bottom:0 !important;box-shadow:none !important;}
+    .top-logo{height:20px !important;width:auto !important;display:block !important;background:transparent !important;border-radius:0 !important;padding:0 !important;}
+    .badge{background:transparent !important;border:0 !important;color:var(--sub) !important;border-radius:0 !important;padding:0 !important;font-size:13px !important;font-weight:800 !important;white-space:nowrap !important;}
+    .notice{background:#F8FAFC !important;border:1px solid #D7E0EA !important;color:#334155 !important;border-radius:18px !important;padding:14px !important;font-size:14px !important;line-height:1.65 !important;margin-bottom:14px !important;}
+    .notice b{color:#17325C !important;}
+    .notice-highlight{display:inline-block !important;padding:2px 8px !important;border-radius:999px !important;background:#EEF4FF !important;color:#183B7A !important;font-weight:900 !important;}
+    .save-info{display:flex;gap:10px;align-items:flex-start;margin:12px 0;padding:12px;border-radius:14px;background:#F8FAFC;border:1px solid var(--line);font-size:14px;line-height:1.5;color:var(--text);font-weight:900;}
+    .save-info input{width:auto;margin-top:3px;accent-color:var(--success);}
   `;
   document.head.appendChild(style);
+
+  window.addEventListener("load", function(){
+    const employeeId = document.getElementById("employeeId");
+    const branch = document.getElementById("branch");
+    const workplace = document.getElementById("workplace");
+    const agreeRow = document.querySelector(".agree");
+    if(!employeeId || !branch || !workplace || !agreeRow) return;
+
+    if(!document.getElementById("saveInfoCheck")){
+      const row = document.createElement("label");
+      row.className = "save-info";
+      row.innerHTML = '<input type="checkbox" id="saveInfoCheck"><span>내 정보 저장</span>';
+      agreeRow.parentNode.insertBefore(row, agreeRow);
+    }
+
+    function loadSavedInfo(){
+      try{
+        const saved = JSON.parse(localStorage.getItem("tbmSavedInfo") || "null");
+        if(!saved) return;
+        employeeId.value = saved.employeeId || "";
+        branch.value = saved.branch || "";
+        workplace.value = saved.workplace || "";
+        const saveCheck = document.getElementById("saveInfoCheck");
+        if(saveCheck) saveCheck.checked = true;
+      }catch(e){}
+    }
+
+    loadSavedInfo();
+
+    if(typeof window.goConfirm === "function"){
+      const originalGoConfirm = window.goConfirm;
+      window.goConfirm = function(){
+        originalGoConfirm();
+        setTimeout(loadSavedInfo, 50);
+      };
+    }
+
+    if(typeof window.submitConfirm === "function"){
+      const originalSubmitConfirm = window.submitConfirm;
+      window.submitConfirm = function(){
+        const saveCheck = document.getElementById("saveInfoCheck");
+        if(saveCheck && saveCheck.checked){
+          localStorage.setItem("tbmSavedInfo", JSON.stringify({
+            employeeId: employeeId.value.trim(),
+            branch: branch.value.trim(),
+            workplace: workplace.value.trim()
+          }));
+        }else{
+          localStorage.removeItem("tbmSavedInfo");
+        }
+        originalSubmitConfirm();
+      };
+    }
+  });
 })();
