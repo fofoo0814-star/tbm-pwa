@@ -31,7 +31,7 @@
 <footer>미래전략실 안전관리팀</footer>
 </main>
 </div>
-<script src="./data.js?v=71"></script>
+<script src="./data.js?v=72"></script>
 <script>
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyhgj8VEdwhSTCoxOY_KOr0JlvotOBf9HmuBNprWxt2okvtn2Wjh105-KDAgt1M7ooy/exec";
 const today=new Date();const days=["일","월","화","수","목","금","토"];document.getElementById("todayText").textContent=`${today.getFullYear()}. ${today.getMonth()+1}. ${today.getDate()}. ${days[today.getDay()]}요일`;
@@ -40,8 +40,52 @@ function renderList(targetId,items,numbered=false){const target=document.getElem
 function renderTbmChecklist(){const target=document.getElementById("tbmChecklist");target.innerHTML="";TBM_DATA.today.checklist.forEach((item,i)=>{const row=document.createElement("label");row.className="tbm-check-row";row.innerHTML=`<input type="checkbox" class="tbm-required-check" data-index="${i+1}"><span>${item}</span>`;target.appendChild(row)})}
 function renderStretch(){const target=document.getElementById("stretchList");target.innerHTML="";TBM_DATA.stretching.forEach((step,i)=>{const div=document.createElement("div");div.className="step";div.innerHTML=`<strong>${i+1}. ${step.title}</strong>${step.description}`;target.appendChild(div)})}
 function renderContent(){document.getElementById("appTitle").textContent=TBM_DATA.appTitle;document.getElementById("tbmTitle").textContent=TBM_DATA.today.title;renderTbmChecklist();renderStretch();renderList("ppeChecklist",[])}
-function calculateHeatIndex(){const temp=parseFloat(document.getElementById("tempInput").value);const humidity=parseFloat(document.getElementById("humidityInput").value);const result=document.getElementById("heatResult");if(Number.isNaN(temp)||Number.isNaN(humidity)){alert("기온과 습도를 모두 입력해 주세요.");return}if(humidity<0||humidity>100){alert("습도는 0~100 사이로 입력해 주세요.");return}const tF=temp*9/5+32;let hiF=-42.379+2.04901523*tF+10.14333127*humidity-0.22475541*tF*humidity-0.00683783*tF*tF-0.05481717*humidity*humidity+0.00122874*tF*tF*humidity+0.00085282*tF*humidity*humidity-0.00000199*tF*tF*humidity*humidity;let hi=(hiF-32)*5/9;if(temp<27){hi=temp}const value=Math.round(hi*10)/10;let level="관심";let guide="기본 예방수칙을 확인합니다.";if(value>=35){level="위험";guide="작업 전후 상태를 수시 확인하고 충분히 휴식합니다."}else if(value>=33){level="경고";guide="물·그늘·휴식을 적극적으로 확인합니다."}else if(value>=31){level="주의";guide="수분섭취와 휴식 여부를 확인합니다."}result.style.display="block";result.innerHTML=`<strong>체감온도 ${value}℃</strong><br><span class="heat-level">${level}</span><br>${guide}`}
-function areAllTbmItemsChecked(){const requiredChecks=[...document.querySelectorAll(".tbm-required-check")];return requiredChecks.length>0&&requiredChecks.every(check=>check.checked)}
+function calculateHeatIndex(){
+  const temp = parseFloat(document.getElementById("tempInput").value);
+  const humidity = parseFloat(document.getElementById("humidityInput").value);
+  const result = document.getElementById("heatResult");
+
+  if (Number.isNaN(temp) || Number.isNaN(humidity)) {
+    alert("기온과 습도를 모두 입력해 주세요.");
+    return;
+  }
+
+  if (humidity < 0 || humidity > 100) {
+    alert("습도는 0~100 사이로 입력해 주세요.");
+    return;
+  }
+
+  const vaporPressure =
+    (humidity / 100) * 6.105 * Math.exp((17.27 * temp) / (237.7 + temp));
+
+  const heatIndex =
+    0.567 * temp + 0.393 * vaporPressure + 3.94;
+
+  const value = Math.round(heatIndex * 100) / 100;
+
+  let level = "관심";
+  let guide = "온열질환 예방수칙을 확인합니다.";
+
+  if (value >= 38) {
+    level = "위험";
+    guide = "위험 단계입니다. 5대 예방수칙을 반드시 확인합니다.";
+  } else if (value >= 35) {
+    level = "경고";
+    guide = "경고 단계입니다. 충분한 휴식과 상태 확인이 필요합니다.";
+  } else if (value >= 33) {
+    level = "주의";
+    guide = "주의 단계입니다. 물·그늘·휴식 여부를 확인합니다.";
+  } else if (value >= 31) {
+    level = "관심";
+    guide = "관심 단계입니다. 기본 예방수칙을 확인합니다.";
+  }
+
+  result.style.display = "block";
+  result.innerHTML =
+    `<strong>체감온도 ${value}℃</strong><br>` +
+    `<span class="heat-level">${level}</span><br>` +
+    `${guide}`;
+}function areAllTbmItemsChecked(){const requiredChecks=[...document.querySelectorAll(".tbm-required-check")];return requiredChecks.length>0&&requiredChecks.every(check=>check.checked)}
 function goConfirm(){if(!areAllTbmItemsChecked()){alert("오늘의 핵심 안전수칙을 모두 체크한 후 확인 완료를 진행해 주세요.");showSection("tbm");return}showSection("confirm")}
 async function submitConfirm(){if(!areAllTbmItemsChecked()){alert("오늘의 핵심 안전수칙을 모두 체크한 후 제출해 주세요.");showSection("tbm");return}const requiredChecks=[...document.querySelectorAll(".tbm-required-check")];const employeeId=document.getElementById("employeeId").value.trim();const branch=document.getElementById("branch").value.trim();const workplace=document.getElementById("workplace").value.trim();const agree=document.getElementById("agreeCheck").checked;if(!employeeId||!branch||!workplace||!agree){alert("사번, 권역, 소속팀 입력 및 확인 체크가 필요합니다.");return}const record={date:new Date().toISOString(),employeeId,branch,workplace,confirmed:"확인 완료",checkedItems:requiredChecks.length};const btn=document.getElementById("submitBtn");btn.disabled=true;btn.textContent="제출 중...";try{await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(record)});localStorage.setItem("tbmConfirmRecord",JSON.stringify(record));const box=document.getElementById("completeBox");box.style.display="block";box.innerHTML=`제출 완료되었습니다.<br>${branch} / ${workplace} / 사번 ${employeeId}`;btn.textContent="제출 완료"}catch(error){alert("제출 중 오류가 발생했습니다. 인터넷 연결 후 다시 시도해 주세요.");btn.disabled=false;btn.textContent="제출하기"}}
 if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./sw.js")})}
