@@ -1,4 +1,4 @@
-const CACHE_NAME = "tbm-pwa-v31";
+const CACHE_NAME = "tbm-pwa-v32";
 
 const HEAT_FIX = `<script>
 window.calculateHeatIndex=function(){
@@ -36,7 +36,7 @@ window.addEventListener('load',function(){
     const sec=document.createElement('section');
     sec.className='section';
     sec.id='food';
-    sec.innerHTML='<span class="pill">\uC2DD\uC911\uB3C5 \uC608\uBC29\uC218\uCE59</span><div class="heat-img-box"><img class="heat-img" alt="food safety guide 1" src="./images/food-rule-1.png"></div><div class="heat-img-box"><img class="heat-img" alt="food safety guide 2" src="./images/food-rule-2.png"></div>';
+    sec.innerHTML='<span class="pill">\uC2DD\uC911\uB3C5 \uC608\uBC29\uC218\uCE59</span><div class="heat-img-box"><img class="heat-img" alt="food safety guide" src="./images/food-rule-1.png"></div>';
     heat.insertAdjacentElement('afterend',sec);
   }
 });
